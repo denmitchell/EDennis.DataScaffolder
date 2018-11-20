@@ -63,7 +63,7 @@ namespace EDennis.DataScaffolder {
                 openFileDialog.InitialDirectory = $"{userProfile}\\source\\repos";
 
                 //only allow appsettings.json files to be selected
-                openFileDialog.Filter = "appsettings.json files (appsettings.json)|appsettings.json";
+                openFileDialog.Filter = "appsettings*.json files (appsettings*.json)|appsettings*.json";
 
                 //if a file is selected ...
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
@@ -152,6 +152,7 @@ namespace EDennis.DataScaffolder {
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(appsettingsPath)
             .AddJsonFile("appsettings.json")
+            .AddJsonFile("appsettings.Development.json")
             .Build();
 
             //declare a dictionary for holding connection string keys/value pairs
