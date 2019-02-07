@@ -33,7 +33,9 @@ namespace EDennis.DataScaffolder {
     public partial class MainForm : Form {
 
         //variable to hold the current connection string key
-        private string currentConnectionStringName = "";
+        private string _currentConnectionStringName = "";
+        private string _appsettingsFileName = "";
+        private string _namespace = "";
 
         private const string DATA_FACTORY_FILE_NAME = "DataFactory.cs";
 
@@ -59,7 +61,7 @@ namespace EDennis.DataScaffolder {
                 openFileDialog.InitialDirectory = $"{userProfile}\\source\\repos";
 
                 //only allow appsettings.json files to be selected
-                openFileDialog.Filter = "appsettings.json files (appsettings.json)|appsettings.json";
+                openFileDialog.Filter = "appsettings files (appsettings[.*].json)|appsettings.json;appsettings.*.json";
 
                 //if a file is selected ...
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
@@ -67,6 +69,8 @@ namespace EDennis.DataScaffolder {
                     //get the file name and containing folder path
                     var fInfo = new FileInfo(openFileDialog.FileName);
                     var fileName = fInfo.Name;
+                    _appsettingsFileName = fileName;
+
                     var projectPath = fInfo.DirectoryName;
 
                     //get a dictionary of connection string names/values
@@ -74,6 +78,9 @@ namespace EDennis.DataScaffolder {
 
                     //calculate the destination path for the DataFactory.cs file
                     var destinationPath = GetDestinationPath(projectPath);
+
+                    //get namespace
+                    _namespace = GetNamespace(projectPath, destinationPath);
 
                     //call the main method to query data and generate the file
                     GenerateClasses(connectionStrings, destinationPath);
@@ -143,9 +150,10 @@ namespace EDennis.DataScaffolder {
         private Dictionary<string, string> GetConnectionStrings(string appsettingsPath) {
 
             //build object graph representing configurations from appsettings.json
+
             IConfigurationRoot configuration = new ConfigurationBuilder()
             .SetBasePath(appsettingsPath)
-            .AddJsonFile("appsettings.json")
+            .AddJsonFile(_appsettingsFileName)
             .Build();
 
             //declare a dictionary for holding connection string keys/value pairs
@@ -215,10 +223,10 @@ namespace EDennis.DataScaffolder {
                 var connectionString = cs.Value;
 
                 //update the current connection string name (key)
-                currentConnectionStringName = cs.Key;
+                _currentConnectionStringName = cs.Key;
 
                 //build the class header line for the connection string
-                sw.WriteLine($"    public static class {connectionStringName}DataFactory {{");
+                sw.WriteLine($"    public static partial class {connectionStringName}DataFactory {{");
 
                 //get the list of table names associated with the current connection string
                 var tableNames = GetTableNames(connectionString);
@@ -248,8 +256,27 @@ namespace EDennis.DataScaffolder {
             sw.WriteLine("using System;");
             sw.WriteLine("using System.Collections.Generic;");
             sw.WriteLine("using System.Text;");
-            sw.WriteLine("namespace DataScafolder {");
+            sw.WriteLine($"namespace {_namespace} {{");
         }
+
+
+        private string GetNamespace(string projectPath, string destinationPath) {
+
+            var file = Directory.EnumerateFiles(projectPath)
+                .Where(f => Path.GetExtension(f) == ".csproj")
+                .Select(f => Path.GetFileNameWithoutExtension(f))
+                .FirstOrDefault();
+
+            if (file != null) {
+                if (destinationPath.EndsWith("Models"))
+                    return file + ".Models";
+                else
+                    return file;
+            }
+
+            return "DataScaffolder";
+        }
+
 
         /// <summary>
         /// Writes the end of the namespace
@@ -273,7 +300,7 @@ namespace EDennis.DataScaffolder {
 
             //display the current connection string name and table name
             //and reset the progress bar
-            lblStatus.Text = $"Scaffolding {currentConnectionStringName}:{dt.TableName}";
+            lblStatus.Text = $"Scaffolding {_currentConnectionStringName}:{dt.TableName}";
             progressBar1.Value = 0;
 
             //write out initial lines for the factory method and collection initializer
@@ -358,6 +385,9 @@ namespace EDennis.DataScaffolder {
             using (var cxn = new SqlConnection(connectionString)) {
                 cxn.Open();
                 var sql = $"select * from {tableName};";
+                var cols = GetColumnNames(connectionString, tableName);
+                var colsJoined = string.Join(",", cols);
+                sql = sql.Replace("*", colsJoined);
                 var adapter = new SqlDataAdapter(sql, cxn);
                 var dt = new DataTable(tableName);
                 adapter.Fill(dt);
@@ -380,7 +410,7 @@ namespace EDennis.DataScaffolder {
             using (var cxn = new SqlConnection(connectionString)) {
                 cxn.Open();
                 var sql =
-@"select table_name
+        @"select table_name
     from information_schema.tables
 	where table_schema not like '%_history' and table_schema <> '_maintenance'
 		and table_type = 'BASE TABLE' 
@@ -400,6 +430,51 @@ namespace EDennis.DataScaffolder {
             }
             return tableNames;
         }
+
+
+        /// <summary>
+        /// Gets a list of tables from the information_schema
+        /// </summary>
+        /// <param name="connectionString">the connection string value</param>
+        /// <returns>a list of tables</returns>
+        private List<string> GetColumnNames(string connectionString, string tableName) {
+
+            //initialize the list of tables
+            var columnNames = new List<string>();
+
+            //connect to the database and retrieve the list of tables
+            using (var cxn = new SqlConnection(connectionString)) {
+                cxn.Open();
+                var sql =
+        $@"select c.name 
+	from sys.columns c 
+	inner join sys.objects o
+		on c.object_id = o.object_id
+	inner join sys.schemas s
+		on s.schema_id = o.schema_id
+	inner join information_schema.columns ic
+		on ic.column_name = c.name
+		and ic.table_name = o.name
+		and ic.table_schema = s.name
+	where c.object_id = object_id('{tableName}','U') 
+		and is_computed = 0 
+		and generated_always_type_desc = 'NOT_APPLICABLE'	
+	order by ic.ordinal_position;";
+
+                //initialize a dataadapter, and use it to fill a dataset
+                var adapter = new SqlDataAdapter(sql, cxn);
+                var dt = new DataTable();
+                adapter.Fill(dt);
+
+                //looping over each row from the information_schema.tables table,
+                //build a list of table names
+                foreach (DataRow row in dt.Rows) {
+                    columnNames.Add(row["name"].ToString());
+                }
+            }
+            return columnNames;
+        }
+
 
         private void btnClose_Click(object sender, EventArgs e) {
             Application.Exit();

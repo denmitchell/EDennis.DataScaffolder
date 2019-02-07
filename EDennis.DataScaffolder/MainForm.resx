@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblInstructions.Text" xml:space="preserve">
-    <value>This utility application will add a DataFactory.cs class to a project having an appsettings.json file with one or more "ConnectionStrings" defined.  The application will try to place the new class in a Models folder.  To create the new class, simply navigate to the project and select the appsettings.json file.
+    <value>This utility application will add a DataFactory.cs class to a project having an appsettings files with one or more "ConnectionStrings" defined.  The application will try to place the new class in a Models folder.  To create the new class, simply navigate to the project and select the appsettings file.
 
 </value>
   </data>
