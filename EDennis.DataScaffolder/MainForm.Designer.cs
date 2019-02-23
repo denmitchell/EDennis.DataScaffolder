@@ -25,10 +25,10 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.lblInstructions = new System.Windows.Forms.Label();
-            this.btnStart = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.StartButton = new System.Windows.Forms.Button();
+            this.ProgressBar1 = new System.Windows.Forms.ProgressBar();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblInstructions
@@ -43,27 +43,27 @@
             this.lblInstructions.TabIndex = 0;
             this.lblInstructions.Text = resources.GetString("lblInstructions.Text");
             // 
-            // btnStart
+            // StartButton
             // 
-            this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnStart.Location = new System.Drawing.Point(150, 140);
-            this.btnStart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(78, 28);
-            this.btnStart.TabIndex = 1;
-            this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
-            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
+            this.StartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StartButton.Location = new System.Drawing.Point(150, 140);
+            this.StartButton.Margin = new System.Windows.Forms.Padding(2);
+            this.StartButton.Name = "StartButton";
+            this.StartButton.Size = new System.Drawing.Size(78, 28);
+            this.StartButton.TabIndex = 1;
+            this.StartButton.Text = "Start";
+            this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
             // 
-            // progressBar1
+            // ProgressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(16, 189);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(358, 17);
-            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar1.TabIndex = 2;
-            this.progressBar1.Visible = false;
+            this.ProgressBar1.Location = new System.Drawing.Point(16, 189);
+            this.ProgressBar1.Margin = new System.Windows.Forms.Padding(2);
+            this.ProgressBar1.Name = "ProgressBar1";
+            this.ProgressBar1.Size = new System.Drawing.Size(358, 17);
+            this.ProgressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.ProgressBar1.TabIndex = 2;
+            this.ProgressBar1.Visible = false;
             // 
             // lblStatus
             // 
@@ -75,32 +75,32 @@
             this.lblStatus.TabIndex = 3;
             this.lblStatus.Visible = false;
             // 
-            // btnClose
+            // CloseButton
             // 
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClose.Location = new System.Drawing.Point(192, 140);
-            this.btnClose.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(78, 28);
-            this.btnClose.TabIndex = 4;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Visible = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.CloseButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.875F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CloseButton.Location = new System.Drawing.Point(192, 140);
+            this.CloseButton.Margin = new System.Windows.Forms.Padding(2);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(78, 28);
+            this.CloseButton.TabIndex = 4;
+            this.CloseButton.Text = "Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Visible = false;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(387, 234);
-            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.lblStatus);
-            this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.btnStart);
+            this.Controls.Add(this.ProgressBar1);
+            this.Controls.Add(this.StartButton);
             this.Controls.Add(this.lblInstructions);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
@@ -113,10 +113,10 @@
         #endregion
 
         private System.Windows.Forms.Label lblInstructions;
-        private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.ProgressBar ProgressBar1;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button CloseButton;
     }
 }
 
