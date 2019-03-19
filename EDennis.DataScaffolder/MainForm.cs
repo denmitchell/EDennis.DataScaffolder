@@ -521,7 +521,7 @@ select
                 var sql =
         @"select t.table_schema + '.' + t.table_name table_name
     from information_schema.tables t
-	where t.table_schema not like '_%'
+	where t.table_schema not like '[_]%'
 		and t.table_type = 'BASE TABLE' 
 		and t.table_name <> '__EFMigrationsHistory'
 	order by t.table_schema, t.table_name;";
