@@ -394,6 +394,9 @@ namespace EDennis.DataScaffolder {
                 case nameof(DateTime):
                     var d = (DateTime)obj;
                     return $"new DateTime({d.Year},{d.Month},{d.Day},{d.Hour},{d.Minute},{d.Second})";
+                case nameof(TimeSpan):
+                    var t = (TimeSpan)obj;
+                    return $"new TimeSpan({t.Hours},{t.Minutes},{t.Seconds})";
                 case nameof(Boolean):
                     var b = (bool)obj;
                     return b ? "true" : "false";
